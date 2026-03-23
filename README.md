@@ -1,6 +1,6 @@
 # RBAC Service
 
-## 1) Start infrastructure (Docker)
+## 1) Start infrastructure (Docker)https://github.com/devcorelate/corelate_rbac_granular/pull/4/conflict?name=docker-compose.yml&base_oid=d5288164d11adf5a0bda0fb23bfd63d04b9d6553&head_oid=5c3899c82841657f8c515da10594473b55b9ed30
 
 Start Eureka + Postgres:
 
