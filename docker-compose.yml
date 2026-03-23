@@ -1,21 +1,47 @@
 services:
+  eureka-server:
+    image: springcloud/eureka:latest
+    container_name: rbac-eureka
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+
   postgres:
     image: postgres:16-alpine
     container_name: rbac-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: rbac_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${DB_NAME:-rbac_db}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     ports:
-      - "5439:5432"
+      - "${DB_PORT:-5439}:5432"
     volumes:
       - rbac_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d rbac_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-rbac_db}"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+
+  rbac-service:
+    image: rbac-service:latest
+    profiles: ["app"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-rbac_db}
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-rbac_db}
+      EUREKA_DEFAULT_ZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8088:8088"
 
 volumes:
   rbac_postgres_data:
