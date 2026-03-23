@@ -1,6 +1,6 @@
 # RBAC Service
 
-## 1) Start infrastructure (Docker)https://github.com/devcorelate/corelate_rbac_granular/pull/4/conflict?name=docker-compose.yml&base_oid=d5288164d11adf5a0bda0fb23bfd63d04b9d6553&head_oid=5c3899c82841657f8c515da10594473b55b9ed30
+## 1) Start infrastructure (Docker)
 
 Start Eureka + Postgres:
 
@@ -89,3 +89,9 @@ verify these in order:
    ```bash
    DB_HOST=localhost DB_PORT=5439 DB_NAME=rbac_db DB_USERNAME=postgres DB_PASSWORD=postgres EUREKA_DEFAULT_ZONE=http://localhost:8761/eureka mvn spring-boot:run
    ```
+
+## Troubleshooting circular dependency (`Requested bean is currently in creation`)
+
+If startup fails around `ApiKeyFilter -> ApiKeyService -> SecurityConfig -> ApiKeyFilter`,
+ensure `PasswordEncoder` is provided from a separate config class (`PasswordConfig`) and not from `SecurityConfig` itself.
+This project already applies that fix.

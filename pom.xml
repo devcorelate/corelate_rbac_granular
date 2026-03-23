@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.corelate</groupId>
+    <groupId>com.yourcompany</groupId>
     <artifactId>rbac-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>rbac-service</name>

@@ -1,4 +1,4 @@
-package com.corelate.rbac;
+package com.yourcompany.rbac;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
