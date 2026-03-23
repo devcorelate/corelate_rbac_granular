@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 public class ApiKeyFilter extends OncePerRequestFilter {
+
+    private static final List<String> EXCLUDED_PATH_PREFIXES = List.of(
+            "/actuator",
+            "/api/health",
+            "/api/auth",
+            "/v3/api-docs",
+            "/swagger-ui");
 
     private final ApiKeyService apiKeyService;
 
@@ -38,5 +46,11 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         } finally {
             TenantContext.clear();
         }
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return EXCLUDED_PATH_PREFIXES.stream().anyMatch(path::startsWith) || "/swagger-ui.html".equals(path);
     }
 }
