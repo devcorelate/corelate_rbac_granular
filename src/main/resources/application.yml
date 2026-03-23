@@ -5,7 +5,7 @@ spring:
   application:
     name: rbac-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/rbac_db}
+    url: ${DB_URL:jdbc:postgresql://localhost:5439/rbac_db}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
   jpa:
